@@ -30,7 +30,5 @@ async def main():
                 break
             print(await chat.answer(message))
 
-
-
 if __name__ == "__main__":
     asyncio.run(main())
