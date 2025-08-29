@@ -27,5 +27,17 @@ class GeminiAgent(AiAgent):
             config=genai.types.GenerateContentConfig(
                 temperature=0,
                 tools=tools,
+                system_instruction=self.__get_system_instruction()
             )
         )
+
+    def __get_system_instruction(self) -> str:
+        system_instruction_file = os.getenv("GEMINI_SYSTEM_INSTRUCTION_FILE", "./instructions/system_instruction.md")
+        if os.path.exists(system_instruction_file):
+            with open(system_instruction_file, 'r') as f:
+                return f.read()
+        else:
+            print(f"System instruction file '{system_instruction_file}' not found.")
+            exit(1)
+
+        return ""
