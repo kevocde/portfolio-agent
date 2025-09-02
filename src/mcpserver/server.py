@@ -1,15 +1,15 @@
 from fastmcp import FastMCP
 import os, logging
 
-logger = logging.getLogger("Tools")
-
-logging.basicConfig(filename='myapp.log', level=logging.INFO)
+logger = logging.getLogger("MCP Server")
+logging.basicConfig(filename='mcp.log', level=logging.DEBUG)
 
 # Create your FastMCP server
 mcp = FastMCP("MyServer")
 
 def load_file_instruction(filename: str) -> str:
-    logger.info('Query the file {}'.format(filename))
+    logger.info('query the file {}'.format(filename))
+
     full_path = "/".join(['./instructions', filename])
     if os.path.exists(full_path):
         with open(full_path, "r") as file:
