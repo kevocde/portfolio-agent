@@ -11,3 +11,6 @@ wheels/
 
 # Environment variables
 .env
+
+# Logs and others
+mcp.log
