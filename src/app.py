@@ -4,9 +4,6 @@ from typing import Union
 from fastapi import FastAPI
 from apirest import Message, History, RedisClient, HistoryRepository
 
-
-common.load_env()
-
 redis_client = RedisClient(host=common.get_env("REDIS_HOST"), port=int(common.get_env("REDIS_PORT")), db=int(common.get_env("REDIS_DB")))
 app = FastAPI()
 
