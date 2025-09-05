@@ -1,4 +1,4 @@
-import argparse
+import argparse, os
 from dotenv import load_dotenv
 
 def load_args() -> dict:
@@ -14,3 +14,7 @@ def load_args() -> dict:
 def load_env() -> None:
     """Load environment variables from .env file if it exists"""
     load_dotenv()
+
+def get_env(key: str, default: str = "") -> str:
+    """Get environment variable"""
+    return os.getenv(key) or default
