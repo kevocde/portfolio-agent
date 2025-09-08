@@ -1,5 +1,7 @@
-import redis, json
+import json
+import redis
 from typing import Any
+
 
 class RedisClient:
     """
