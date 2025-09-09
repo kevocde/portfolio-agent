@@ -1,21 +1,25 @@
-from .datatypes import BasicHistory, Message
-from .ai_agent import AiAgent
-from .constans import ROLE_ASSISTANT
+import os
+import time
+
+from fastmcp import Client
 from google import genai
 from google.genai import types
-from fastmcp import Client
-import os, asyncio
+
+from common import HistoryDTO, MessageDTO
+from .ai_agent import AiAgent
+from common import ROLE_ASSISTANT
+
 
 class GeminiAgent(AiAgent):
     def __init__(self, mcp_client: Client|None = None):
         self.client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
         self.mcp_client = mcp_client
 
-    async def get_completion(self, history: BasicHistory) -> Message:
+    async def get_completion(self, history: HistoryDTO) -> MessageDTO:
         response = await self.__generate_content_async(history)
-        return Message(role=ROLE_ASSISTANT, content=str(response.text).rstrip("\n"))
+        return MessageDTO(role=ROLE_ASSISTANT, time=time.time(), content=str(response.text).rstrip("\n"))
 
-    async def __generate_content_async(self, history: BasicHistory) -> types.GenerateContentResponse:
+    async def __generate_content_async(self, history: HistoryDTO) -> types.GenerateContentResponse:
         tools = []
 
         if self.mcp_client:

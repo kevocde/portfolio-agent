@@ -2,7 +2,6 @@ import uuid, time, os
 import uvicorn, common
 from typing import Union
 from fastapi import FastAPI
-from apirest import Message, History
 
 from common import RedisClient, RedisHistoryRepository, HistoryDTO, MessageDTO
 
