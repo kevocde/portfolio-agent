@@ -7,7 +7,7 @@ from google.genai import types
 
 from common import HistoryDTO, MessageDTO
 from .ai_agent import AiAgent
-from common import ROLE_ASSISTANT
+from common import ROLE_ASSISTANT, get_env
 
 
 class GeminiAgent(AiAgent):
@@ -29,6 +29,7 @@ class GeminiAgent(AiAgent):
             model=os.getenv("GEMINI_MODEL", "gemini-2.0-flash"),
             contents=history.convert_to_gemini_format(),
             config=genai.types.GenerateContentConfig(
+                max_output_tokens=int(get_env("GEMINI_MAX_OUTPUT_TOKENS", 1024)),
                 temperature=0,
                 tools=tools,
                 system_instruction=self.__get_system_instruction()
