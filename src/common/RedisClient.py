@@ -20,5 +20,8 @@ class RedisClient:
     def add_to_key(self, key: str, value: dict):
         self.client.rpush(key, json.dumps(value))
 
+    def replace_key(self, key: str, idx: int, value: dict):
+        self.client.lset(key, idx, json.dumps(value))
+
     def delete_key(self, key: str):
         self.client.delete(key)

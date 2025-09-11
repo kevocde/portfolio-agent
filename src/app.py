@@ -19,6 +19,7 @@ gemini_agent = GeminiAgent(mcp_client)
 # Initialize the api rest
 app = FastAPI()
 
+# Routers
 @app.get("/")
 async def help_check():
     return {"code": 200, "errors": False}
@@ -42,6 +43,7 @@ async def send_message_to_chat(session: str, message: InMessageDTO) -> MessageDT
 async def get_chat_history(session: str) -> HistoryDTO:
     redis_history_repository = RedisHistoryRepository(client=redis_client, key="chat.history.{}".format(session))
     return redis_history_repository.get_history()
+
 
 if __name__ == "__main__":
     args = load_args()
