@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Chat Widget Preview</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+  <div id="chat-container"></div>
+  <script type="module">
+    import { initAgentChatWidget } from "./index.js";
+    initAgentChatWidget({ elementId: "chat-container" });
+  </script>
+</body>
+</html>
