@@ -12,13 +12,12 @@ export default defineConfig({
   },
   build: {
     lib: {
-      entry: "./public/index.js",
+      entry: "./index.js",
       name: "ChatWidget",
       fileName: (format) => `chat-widget.${format}.js`,
       formats: ["umd"],
     },
     rollupOptions: {
-      external: ["vue"],
       output: {
         globals: {
           vue: "Vue",
