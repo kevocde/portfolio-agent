@@ -1,6 +1,6 @@
 import "./style.css";
 import { createApp } from "vue";
-import AgentChatWidget from "./AgentChatWidget.vue";
+import AgentChatWidget from "./components/AgentChatWidget.vue";
 
 export function initAgentChatWidget(options = {}) {
   const el = document.getElementById(options.elementId) || document.body;
