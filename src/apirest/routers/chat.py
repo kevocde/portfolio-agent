@@ -1,6 +1,7 @@
 import uuid
 import time
 
+from fastapi.responses import FileResponse
 from fastmcp import Client
 from fastapi import APIRouter, Depends
 
@@ -24,6 +25,13 @@ router = APIRouter(prefix="/chat")
 
 # Initialize the anonymous guard
 anonymous_guard = AnonymousGuardDependency(redis_client)
+
+@router.get("/")
+async def get_chat_umd():
+    """
+    Get the chat umd
+    """
+    return FileResponse("public/dist/chat-widget.umd.js")
 
 @router.post("/", dependencies=[Depends(anonymous_guard)])
 async def init_chat():
