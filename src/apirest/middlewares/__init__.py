@@ -1,1 +1,1 @@
-from .AnonymousGuard import AnonymousGuard
+from .AnonymousGuard import AnonymousGuardDependency

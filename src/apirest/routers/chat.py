@@ -2,9 +2,10 @@ import uuid
 import time
 
 from fastmcp import Client
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 from common import RedisClient, RedisHistoryRepository, MessageDTO, InMessageDTO, get_env
+from apirest.middlewares import AnonymousGuardDependency
 from chat import Chat, GeminiAgent
 
 
@@ -21,14 +22,17 @@ mcp_client = Client("src/mcpserver.py")
 # Initialize the router
 router = APIRouter(prefix="/chat")
 
-@router.post("/")
+# Initialize the anonymous guard
+anonymous_guard = AnonymousGuardDependency(redis_client)
+
+@router.post("/", dependencies=[Depends(anonymous_guard)])
 async def init_chat():
     """
     Initialize the chat
     """
     return {"session": str(uuid.uuid4()), "messages": [{"role": "assistance", "time": time.time(), "text": "¡Hola!, que bueno tenerte por aquí, soy Kevin AI, puedes preguntarme lo que desees"}]}
 
-@router.post("/{session}")
+@router.post("/{session}", dependencies=[Depends(anonymous_guard)])
 async def send_message_to_chat(session: str, message: InMessageDTO) -> MessageDTO:
     """
     Send a message to the chat
