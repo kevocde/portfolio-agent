@@ -16,3 +16,7 @@ app.add_middleware(
 )
 
 app.include_router(chat_router)
+
+@app.get("/")
+async def health_check():
+    return {"message": "Everything is working"}
