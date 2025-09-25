@@ -36,4 +36,6 @@ RUN npm run build
 # Remove npm dependencies
 RUN rm -rf node_modules public/components public/shared public/index.html public/index.js public/style.css
 
-CMD [".venv/bin/python", "src/app.py", "--host", "0.0.0.0", "--port", "8000"]
+
+RUN chmod +x entrypoint.sh
+CMD ["./entrypoint.sh"]
