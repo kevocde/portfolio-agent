@@ -2,13 +2,13 @@ FROM debian:stable-slim
 
 # Install dependencies
 RUN apt-get update && \
-    apt-get install -y curl && \
-    curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
-    apt-get install -y nodejs && \
-    apt-get install -y python3 python3-pip && \
-    apt-get install -y unzip && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+apt-get install -y curl && \
+curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
+apt-get install -y nodejs && \
+apt-get install -y python3 python3-pip && \
+apt-get install -y unzip && \
+apt-get clean && \
+rm -rf /var/lib/apt/lists/*
 
 # Install uv dependency manager
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
