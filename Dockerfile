@@ -1,41 +1,22 @@
 FROM debian:stable-slim
 
-# Install dependencies
-RUN apt-get update && \
-apt-get install -y curl && \
-curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
-apt-get install -y nodejs && \
-apt-get install -y python3 python3-pip && \
-apt-get install -y unzip && \
-apt-get clean && \
-rm -rf /var/lib/apt/lists/*
+# Install de basic
+RUN apt-get update -y
 
-# Install uv dependency manager
+# Install python and uv
+RUN apt-get install -y python3 redis-server curl
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
+RUN apt-get install -y nodejs
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Copy application files and install dependencies
 WORKDIR /app
-
-# Copy application files
 COPY . /app
-
-# Init venv
-RUN ~/.local/bin/uv venv
-
-# Activate venv
-RUN . .venv/bin/activate
-
-# Install uv
+RUN ~/.local/bin/uv venv && chmod +x .venv/bin/activate && .venv/bin/activate
 RUN ~/.local/bin/uv sync
-
-# Install npm dependencies
-RUN npm install
-
-# Build the application
-RUN npm run build
-
-# Remove npm dependencies
+RUN npm install && npm run build
 RUN rm -rf node_modules public/components public/shared public/index.html public/index.js public/style.css
-
 
 RUN chmod +x entrypoint.sh
 CMD ["./entrypoint.sh"]

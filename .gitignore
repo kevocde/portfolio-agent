@@ -18,3 +18,4 @@ mcp.log
 # Npm
 node_modules/
 dist/
+.vercel
