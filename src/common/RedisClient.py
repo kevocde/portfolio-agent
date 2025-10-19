@@ -9,7 +9,7 @@ class RedisClient:
     """
 
     def __init__(self, host: str, port: int, db: int):
-        self.client = redis.Redis(host=host, port=port, db=db)
+        self.client = redis.Redis(host=host, port=port, db=db, decode_responses=True, ssl=True)
 
     def get_client(self) -> redis.Redis:
         return self.client
