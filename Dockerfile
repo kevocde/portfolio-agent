@@ -4,7 +4,7 @@ FROM debian:stable-slim
 RUN apt-get update -y
 
 # Install python and uv
-RUN apt-get install -y python3 redis-server curl
+RUN apt-get install -y python3 curl
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
 RUN apt-get install -y nodejs
