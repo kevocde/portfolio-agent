@@ -26,14 +26,14 @@ router = APIRouter(prefix="/chat")
 # Initialize the anonymous guard
 anonymous_guard = AnonymousGuardDependency(redis_client)
 
-@router.get("/")
+@router.get("")
 async def get_chat_umd():
     """
     Get the chat umd
     """
     return FileResponse("public/dist/chat-widget.umd.js")
 
-@router.post("/", dependencies=[Depends(anonymous_guard)])
+@router.post("", dependencies=[Depends(anonymous_guard)])
 async def init_chat():
     """
     Initialize the chat
