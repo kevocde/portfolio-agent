@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
+import 'dotenv/config';
 
 export default defineConfig({
   root: 'public',
@@ -27,6 +28,10 @@ export default defineConfig({
     },
   },
   define: {
-    "process.env": {}
+    "process.env.front": {
+      API_URL: process.env.API_URL,
+      MESSAGE_LENGTH: process.env.MESSAGE_LENGTH,
+      AGENT_NAME: process.env.AGENT_NAME,
+    }
   }
 });

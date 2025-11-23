@@ -1,8 +1,9 @@
 import axios from 'axios';
+import { SESSION_KEY, API_URL } from './constans';
 
-const SESSION_KEY = 'chat.session';
+
 const client = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://127.0.0.1:8080'
+  baseURL: API_URL
 });
 
 export async function initChat(renew = FALSE) {
