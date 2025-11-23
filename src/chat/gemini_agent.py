@@ -12,7 +12,7 @@ from common import ROLE_ASSISTANT, get_env
 
 class GeminiAgent(AiAgent):
     def __init__(self, mcp_client: Client|None = None):
-        self.client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+        self.client = genai.Client(api_key=get_env("GEMINI_API_KEY"))
         self.mcp_client = mcp_client
 
     async def get_completion(self, history: HistoryDTO) -> MessageDTO:
@@ -26,7 +26,7 @@ class GeminiAgent(AiAgent):
             tools.append(self.mcp_client.session)
 
         return await self.client.aio.models.generate_content(
-            model=os.getenv("GEMINI_MODEL", "gemini-2.0-flash"),
+            model=get_env("GEMINI_MODEL", "gemini-2.0-flash"),
             contents=history.convert_to_gemini_format(),
             config=genai.types.GenerateContentConfig(
                 max_output_tokens=int(get_env("GEMINI_MAX_OUTPUT_TOKENS", 1024)),
@@ -44,5 +44,3 @@ class GeminiAgent(AiAgent):
         else:
             print(f"System instruction file '{system_instruction_file}' not found.")
             exit(1)
-
-        return ""

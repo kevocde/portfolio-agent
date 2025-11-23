@@ -1,4 +1,4 @@
-from .utilities import load_args, get_env
+from .utilities import load_args, get_env, get_message_length
 from .RedisClient import RedisClient
 from .Repositories import RedisHistoryRepository, HistoryRepository
 from .DTOs import HistoryDTO, MessageDTO, InMessageDTO

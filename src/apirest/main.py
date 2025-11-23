@@ -1,11 +1,8 @@
-from math import prod
-from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .routers import chat_router
-from .middlewares import AnonymousGuard
-from common import RedisClient, get_env
+from common import get_env
 
 if get_env("ENV", "development") == "production":
     app = FastAPI(docs_url=None, redoc_url=None)

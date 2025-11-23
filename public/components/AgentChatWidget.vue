@@ -1,6 +1,9 @@
 <template>
   <div class="chat">
     <div class="chat__history">
+			<div v-if="loading" class="history__message">
+				<div class="message__content typing-animation">. . .</div>
+			</div>
       <div v-for="message in history" class="history__message" :class="{ 'history__message--reverse': (message.role !== 'model') }">
         <span class="message__author">{{ (message.role !== 'model') ? 'Tú' : AGENT_NAME }}:</span>
         <div class="message__content">{{ message.content }}</div>
@@ -20,10 +23,11 @@
 <script setup>
 import { ref, defineModel, computed, onMounted } from 'vue';
 import { initChat, sendUserMessage } from '../shared/ChatServices';
-import { AGENT_NAME, MAX_MESSAGE_LENGTH } from '../shared/constans';
+import { AGENT_NAME, MIN_MESSAGE_LENGTH, MAX_MESSAGE_LENGTH } from '../shared/constans';
 
 let userMessage = defineModel('message', {required: true, default: ''});
 let history = ref([]);
+let loading = ref(false);
 
 onMounted(() => {
   initChat(true).then(message => {
@@ -36,7 +40,7 @@ onMounted(() => {
 })
 
 const sendMessage = (evt) => {
-  if (isNotEmptyMessage(userMessage)) {
+  if (isValidMessage(userMessage)) {
     const content = userMessage.value;
 
     // Set the message to the history
@@ -48,20 +52,26 @@ const sendMessage = (evt) => {
     userMessage.value = '';
 
     // Send the message
-    sendUserMessage(content).then(message => {
-      // Set the message to the history
-      history.value.unshift(message);
-    });
+    loading.value = true;
 
-
+    sendUserMessage(content)
+      .then(message => {
+        // Set the message to the history
+        history.value.unshift(message);
+				loading.value = false;
+      })
+			.finally(() => {
+				loading.value = false;
+			})
+    ;
   }
 }
 
 const enabledMessage = computed(() => {
-  return isNotEmptyMessage(userMessage, 1, MAX_MESSAGE_LENGTH);
+  return isValidMessage(userMessage, MIN_MESSAGE_LENGTH, MAX_MESSAGE_LENGTH);
 })
 
-const isNotEmptyMessage = (model, min = 1, max = 500) => {
+const isValidMessage = (model, min = 1, max = 500) => {
   return model.value.length >= min && model.value.length <= max
 }
 </script>
@@ -119,6 +129,24 @@ const isNotEmptyMessage = (model, min = 1, max = 500) => {
           }
         }
       }
+    }
+
+		@keyframes typing {
+			from {
+				opacity: 20%;
+			}
+
+			50% {
+				opacity: 100%;
+			}
+
+			to {
+				opacity: 20%;
+			}
+		}
+
+		.typing-animation {
+      animation: typing .9s steps(12) infinite;
     }
   }
 </style>

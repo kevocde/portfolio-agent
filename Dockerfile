@@ -2,7 +2,7 @@ FROM debian:stable-slim
 
 ARG VITE_API_URL
 ARG VITE_AGENT_NAME
-ARG MAX_MESSAGE_LENGTH
+ARG MESSAGE_LENGTH
 
 # Install de basic
 RUN apt-get update -y
@@ -24,7 +24,7 @@ RUN ~/.local/bin/uv sync
 # Create a .env file with the environment variables
 RUN echo "VITE_API_URL=${VITE_API_URL}" > .env
 RUN echo "VITE_AGENT_NAME=${VITE_AGENT_NAME}" >> .env
-RUN echo "MAX_MESSAGE_LENGTH=${MAX_MESSAGE_LENGTH}" >> .env
+RUN echo "MESSAGE_LENGTH=${MESSAGE_LENGTH}" >> .env
 RUN npm install && npm run build
 RUN rm -rf node_modules public/components public/shared public/index.html public/index.js public/style.css .env
 
