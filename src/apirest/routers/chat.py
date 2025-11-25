@@ -1,5 +1,6 @@
-import uuid
-import time
+import uuid, time
+
+from typing import Any
 
 from fastapi.responses import FileResponse
 from fastmcp import Client
@@ -20,11 +21,11 @@ redis_client = RedisClient(
 # Initialize the mcp client
 mcp_client = Client("src/mcpserver.py")
 
-# Initialize the router
-router = APIRouter(prefix="/chat")
-
 # Initialize the anonymous guard
 anonymous_guard = AnonymousGuardDependency(redis_client)
+
+# Initialize the router
+router = APIRouter(prefix="/chat", dependencies=[Depends(anonymous_guard)])
 
 @router.get("")
 async def get_chat_umd():
@@ -33,12 +34,21 @@ async def get_chat_umd():
     """
     return FileResponse("public/dist/chat-widget.umd.js")
 
-@router.post("", dependencies=[Depends(anonymous_guard)])
-async def init_chat():
+@router.post("")
+async def init_chat() -> dict[Any, Any]:
     """
     Initialize the chat
     """
-    return {"session": str(uuid.uuid4()), "messages": [{"role": "assistance", "time": time.time(), "text": "¡Hola!, que bueno tenerte por aquí, soy Kevin AI, puedes preguntarme lo que desees"}]}
+    return {
+        "session": str(uuid.uuid4()),
+        "messages": [
+            MessageDTO(
+                role="assistance",
+                time=time.time(),
+                content="¡Hola!, que bueno tenerte por aquí, soy Kevin AI, puedes preguntarme lo que desees"
+            ),
+        ]
+    }
 
 @router.post("/{session}", dependencies=[Depends(anonymous_guard)])
 async def send_message_to_chat(session: str, message: InMessageDTO) -> MessageDTO:
@@ -50,7 +60,7 @@ async def send_message_to_chat(session: str, message: InMessageDTO) -> MessageDT
         chat = Chat(gemini_agent, get_history_repo(session))
         return await chat.answer(message.to_message_dto().content)
 
-@router.get("/{session}")
+@router.get("/messages")
 async def get_chat_history(session: str):
     """
     Get the chat history

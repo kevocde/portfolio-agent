@@ -1,6 +1,6 @@
 import uvicorn
 
-from common import load_args, get_env
+from common import load_args
 from apirest import app
 
 
