@@ -50,6 +50,13 @@ async def init_chat() -> dict[Any, Any]:
         ]
     }
 
+@router.get("/{session}")
+async def get_chat_history(session: str):
+    """
+    Get the chat history
+    """
+    return get_history_repo(session).get_history()
+
 @router.post("/{session}", dependencies=[Depends(anonymous_guard)])
 async def send_message_to_chat(session: str, message: InMessageDTO) -> MessageDTO:
     """
@@ -59,13 +66,6 @@ async def send_message_to_chat(session: str, message: InMessageDTO) -> MessageDT
         gemini_agent = GeminiAgent(client_session)
         chat = Chat(gemini_agent, get_history_repo(session))
         return await chat.answer(message.to_message_dto().content)
-
-@router.get("/messages")
-async def get_chat_history(session: str):
-    """
-    Get the chat history
-    """
-    return get_history_repo(session).get_history()
 
 def get_history_repo(session: str) -> RedisHistoryRepository:
     """

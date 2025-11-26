@@ -12,8 +12,8 @@
     <div class="chat__actioner">
       <form action="actioner__form">
         <fieldset class="form__fieldset">
-          <textarea class="fieldset__message" id="user-message" v-model="userMessage" @keypress.enter.prevent="sendMessage" placeholder="Escribe y presiona ENTER" rows="1" :maxlength="MAX_MESSAGE_LENGTH"></textarea>
-          <button class="fieldset__send" :disabled="!enabledMessage" @click.prevent="sendMessage"><i class="lni lni-location-arrow-right"></i></button>
+          <textarea class="fieldset__message" id="user-message" v-model="userMessage" @keypress.enter.prevent="send" placeholder="Escribe y presiona ENTER" rows="1" :maxlength="MAX_MESSAGE_LENGTH"></textarea>
+          <button class="fieldset__send" :disabled="!enabledMessage" @click.prevent="send"><i class="lni lni-location-arrow-right"></i></button>
         </fieldset>
       </form>
     </div>
@@ -22,7 +22,7 @@
 
 <script setup>
 import { ref, defineModel, computed, onMounted } from 'vue';
-import { initChat, sendUserMessage } from '../shared/ChatServices';
+import { initializeChat, sendMessage } from '../shared/ChatServices';
 import { AGENT_NAME, MIN_MESSAGE_LENGTH, MAX_MESSAGE_LENGTH } from '../shared/constans';
 
 let userMessage = defineModel('message', {required: true, default: ''});
@@ -30,16 +30,14 @@ let history = ref([]);
 let loading = ref(false);
 
 onMounted(() => {
-  initChat(true).then(message => {
-    history.value.unshift({
-      role: 'model',
-      content: message.text,
-      time: message.time
+  initializeChat().then(messages => {
+    messages.forEach((message) => {
+      history.value.unshift(message);
     });
   })
 })
 
-const sendMessage = (evt) => {
+const send = (evt) => {
   if (isValidMessage(userMessage)) {
     const content = userMessage.value;
 
@@ -54,11 +52,9 @@ const sendMessage = (evt) => {
     // Send the message
     loading.value = true;
 
-    sendUserMessage(content)
+    sendMessage(content)
       .then(message => {
-        // Set the message to the history
         history.value.unshift(message);
-				loading.value = false;
       })
 			.finally(() => {
 				loading.value = false;
